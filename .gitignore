@@ -1,0 +1,8 @@
+# MacOS
+.DS_Store
+
+# MITM SSL
+scripts/certs
+
+# node/npm
+node_modules

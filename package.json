@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "emu": "sh scripts/emu.sh",
+        "cert": "sh scripts/cert.sh",
+        "mitm": "mitmproxy --showhost",
+        "frida:start": "sh scripts/frida/frida-start.sh",
+        "frida:unpin": "sh scripts/frida/frida-unpin.sh"
+    }
+}
