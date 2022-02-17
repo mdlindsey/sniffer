@@ -68,7 +68,7 @@ Once the emulator is fully booted, you must copy the MITM SSL certificate to the
 yarn cert
 ```
 
-Certain applications use SSL pinning (also known as cert pinning) to obfuscate their API interactions within an application. We will use Frida to bypass any SSL pinning for specific packages.
+Certain applications use SSL pinning (also known as cert pinning) to obfuscate their API interactions within an application. We will use Frida to bypass any SSL pinning for specific packages. If your application already functions as expected there is a good chance it does not use SSL pinning and you can skip these last two steps.
 
 This must stay running in the background in a separate terminal.
 
@@ -78,9 +78,9 @@ yarn frida:start
 
 Once the Frida server is running we must specify which application(s) we want to unpin. You may need to change the `PACKAGE_NAME` variable in `scripts/frida/frida-unpin.sh` depending on which application you are sniffing. Note that package names can be found in the Google Play URLs.
 
-eg: PlayStation application URL - https://play.google.com/store/apps/details?id=**com.scee.psxandroid**
+eg: PlayStation application URL - https://play.google.com/store/apps/details?id=com.scee.psxandroid
 
-This must stay running in the background in a separate terminal.
+This must stay running in the background in a separate terminal. If you kill the application you will need to restart this command.
 
 ```
 yarn frida:unpin
@@ -92,11 +92,20 @@ For demo purposes, the PlayStation app uses SSL pinning and can be found in `apk
 
 The `--showhost` flag ensures that domain names are preserved rather than resolving to their respective DNS IPs.
 
-To export a request as cURL:
-1. Click into the request you wish to export
-2. Press `q` to exit the request details view
-3. Press `e` to display the context menu for that request
-4. Select the `curl` option and provide a filename to be used for the export
+All traffic is logged into `logs/stream.txt` (raw stream) and `logs/curl.txt` (cURL equivalents). These files are wiped clean on each start of the proxy so ensure you make copies of anything you'd like to keep.
+
+You may need to allow global read permissions for the `h2c.pl` script if your machine is unable to run it. To do that, use the command below.
+
+Python 2.7 or higher is required.
+
+```
+sudo chmod a=rx scripts/h2c.pl
+```
+
+To manually export a request as cURL:
+1. Select request you wish to export
+2. Press `e` to display the context menu for that request
+3. Select the `curl` option and provide a filename to be used for the export
 
 ## Using Android Studio
 
@@ -107,3 +116,7 @@ Since we cannot (easily) use AVDs with Google Play Services enabled, we must ins
 Thanks to [Parker Ballner](https://github.com/parker-ballner) for putting together the original documentation on using MITM Proxy.
 
 Thanks to [Tim Perry](https://twitter.com/pimterry) for [his Frida guide](https://httptoolkit.tech/blog/frida-certificate-pinning/#install-and-start-frida-on-the-device) and creating [frida-script.js](https://github.com/httptoolkit/frida-android-unpinning) to simplify Frida interactions.
+
+Thanks to [cURL](https://github.com/curl) for their simple [h2c library](https://github.com/curl/h2c) which allows converting raw HTTP streams to cURL.
+
+Thanks to [Martin Stut](https://github.com/martinstut) for his [MITM Proxy Cheatsheet](https://www.stut-it.net/blog/2017/mitmproxy-cheatsheet.html).
