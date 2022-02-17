@@ -6,3 +6,7 @@ scripts/certs
 
 # node/npm
 node_modules
+
+# Python
+logs
+__pycache__
